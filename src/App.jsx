@@ -5,6 +5,18 @@ function generateSimpleId() {
   return id
 }
 
+const Header = ({ weekStart, weekEnd }) => {
+  return (
+    <section>
+        <h1>MyCalendar</h1>
+        <label>Location: </label>
+        <input type="text" />
+        <p>Week: {weekStart} - {weekEnd}</p>
+        <hr />
+    </section>
+  )
+}
+
 const Popup = ({ day, onPopupSubmit }) => {
   return (
     <section style={{position: 'absolute', top: '50%', left: '50%', backgroundColor: 'gold' }}>
@@ -14,6 +26,25 @@ const Popup = ({ day, onPopupSubmit }) => {
       <label>Description</label>
       <input type="text" name='taskText' id='input-task-text'/>
       <button onClick={() => onPopupSubmit()}>Add</button>
+    </section>
+  )
+}
+
+const Calendar = ({ onShowPopup }) => {
+  return (
+    <section>
+      { data.map((item) => {
+        return (
+          <div key={ item.day } onClick={() => {onShowPopup(item.day)}} style={{outline: "1px solid black"}}>
+            <h3>{ item.day }</h3>
+            <ul>
+              { item.tasks.map((task) => {
+                return <li key={task.id}>{task.title}</li>
+              })}
+            </ul>
+          </div>
+        )
+      })}
     </section>
   )
 }
@@ -31,7 +62,7 @@ const App = () => {
   const first_f = month + '/' + first + '/' + year
   const last_f = month + '/' + last + '/' + year
 
-  const displayPopup = (day) => {
+  const handleShowPopup = (day) => {
     setDay(day)
     setShowPopup(true)
   }
@@ -44,26 +75,9 @@ const App = () => {
 
   return (
     <>
-      <h1>MyCalendar</h1>
-      <label>Location: </label>
-      <input type="text" />
-      <p>Week: {first_f} - {last_f}</p>
-      <hr />
+      <Header weekStart={first_f} weekEnd={last_f} />
       { showPopup && <Popup day={day} onPopupSubmit={handlePopupSubmit} /> }
-      <section>
-        { data.map((item) => {
-          return (
-            <div key={ item.day } onClick={() => {displayPopup(item.day)}} style={{outline: "1px solid black"}}>
-              <h3>{ item.day }</h3>
-              <ul>
-                { item.tasks.map((task) => {
-                  return <li key={task.id}>{task.title}</li>
-                })}
-              </ul>
-            </div>
-          )
-        })}
-      </section>
+      <Calendar onShowPopup={handleShowPopup} />
     </>
   )
 }
