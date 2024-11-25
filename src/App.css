@@ -1,0 +1,63 @@
+@import './base.css';
+
+/* MAIN SECTION */
+.main {
+    background-color: var(--bg-gray);
+}
+
+/* HEADER SECTION */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2em;
+    background-color: inherit;
+    border: none;
+}
+
+.header-h1-location-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-h1-location-container h1 {
+    padding-right: 1em;
+}
+
+.header-h1-location-container label {
+    padding-right: 1em;
+}
+
+/* CALENDAR SECTION */
+.section-calendar {
+    width: 90vw;
+    margin: 0 auto;
+    background-color: var(--bg-light-gray);
+    padding: 1em;
+}
+
+.section-calendar {
+    display: flex;
+    text-align: center;
+    overflow: auto;
+}
+
+.section-calendar div {
+    flex-grow: 1;
+    padding: .25em 1em 1em;
+    border: 1px solid black;
+}
+
+.section-calendar div h3 {
+    padding: 0 .5em .5em;
+}
+
+.section-calendar div ul {
+    padding: .5em;
+}
+
+.section-calendar ul li {
+    text-align: center;
+    list-style: none;
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './App.css'
 
 function generateSimpleId() {
   let id = Math.random().toString(36).substr(2, 9); // Generates a 9-character alphanumeric string
@@ -7,12 +8,13 @@ function generateSimpleId() {
 
 const Header = ({ weekStart, weekEnd }) => {
   return (
-    <section>
+    <section className='section-header'>
+      <div className='header-h1-location-container'>
         <h1>MyCalendar</h1>
         <label>Location: </label>
         <input type="text" />
-        <p>Week: {weekStart} - {weekEnd}</p>
-        <hr />
+      </div>
+      <p>Week: {weekStart} - {weekEnd}</p>
     </section>
   )
 }
@@ -32,10 +34,10 @@ const Popup = ({ day, onPopupSubmit }) => {
 
 const Calendar = ({ onShowPopup }) => {
   return (
-    <section>
+    <section className='section-calendar'>
       { data.map((item) => {
         return (
-          <div key={ item.day } onClick={() => {onShowPopup(item.day)}} style={{outline: "1px solid black"}}>
+          <div key={ item.day } onClick={() => {onShowPopup(item.day)}}>
             <h3>{ item.day }</h3>
             <ul>
               { item.tasks.map((task) => {
@@ -74,11 +76,11 @@ const App = () => {
   }
 
   return (
-    <>
+    <section className='main'>
       <Header weekStart={first_f} weekEnd={last_f} />
       { showPopup && <Popup day={day} onPopupSubmit={handlePopupSubmit} /> }
       <Calendar onShowPopup={handleShowPopup} />
-    </>
+    </section>
   )
 }
 

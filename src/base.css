@@ -1,0 +1,12 @@
+/* Base css stylesheet: resets, fonts, and colors. */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg-gray: #ddd;
+    --bg-light-gray: #F5F5F5;
+}
