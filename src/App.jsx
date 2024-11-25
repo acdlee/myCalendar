@@ -2,12 +2,25 @@ import { useState } from 'react'
 
 function generateSimpleId() {
   let id = Math.random().toString(36).substr(2, 9); // Generates a 9-character alphanumeric string
-  console.log(id)
   return id
 }
 
+const Popup = ({ day, onPopupSubmit }) => {
+  return (
+    <section style={{position: 'absolute', top: '50%', left: '50%', backgroundColor: 'gold' }}>
+      <h2>Add task for {day}</h2>
+      <label>Title</label>
+      <input type="text" name="taskTitle" id="input-task-title" />
+      <label>Description</label>
+      <input type="text" name='taskText' id='input-task-text'/>
+      <button onClick={() => onPopupSubmit()}>Add</button>
+    </section>
+  )
+}
+
 const App = () => {
-  const [count, setCount] = useState(0)
+  const [showPopup, setShowPopup] = useState(false)
+  const [day, setDay] = useState('')
 
   const curr = new Date
   const month = curr.getMonth() + 1
@@ -18,8 +31,15 @@ const App = () => {
   const first_f = month + '/' + first + '/' + year
   const last_f = month + '/' + last + '/' + year
 
-  const addNewTask = (day) => {
-    console.log(day)
+  const displayPopup = (day) => {
+    setDay(day)
+    setShowPopup(true)
+  }
+
+  const handlePopupSubmit = () => {
+    console.log('Submitted!')
+    setDay('')
+    setShowPopup(false)
   }
 
   return (
@@ -29,10 +49,11 @@ const App = () => {
       <input type="text" />
       <p>Week: {first_f} - {last_f}</p>
       <hr />
+      { showPopup && <Popup day={day} onPopupSubmit={handlePopupSubmit} /> }
       <section>
         { data.map((item) => {
           return (
-            <div key={ item.day } onClick={() => {addNewTask(item.day)}} style={{outline: "1px solid black"}}>
+            <div key={ item.day } onClick={() => {displayPopup(item.day)}} style={{outline: "1px solid black"}}>
               <h3>{ item.day }</h3>
               <ul>
                 { item.tasks.map((task) => {
