@@ -60,4 +60,16 @@
 .section-calendar ul li {
     text-align: center;
     list-style: none;
+    padding: .5em;
+    width: fit-content;
+    margin: 0 auto;
+    background-color: bisque;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.div-task-item-popup {
+    padding: .2em;
+    background-color: blanchedalmond;
+    border: 1px solid plum;
 }

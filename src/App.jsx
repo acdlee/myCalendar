@@ -68,6 +68,40 @@ const Popup = ({ day, onPopupSubmit }) => {
   );
 }
 
+const TaskItemPopup = ({ title, text, handlePopup }) => {
+  const handleClose = (e) => {
+    e.preventDefault();
+    handlePopup();
+  }
+
+  return (
+    <div className='div-task-item-popup'>
+      <button onClick={handleClose}>X</button>
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </div>
+  );
+}
+
+const TaskItem = ({ task }) => {
+  const [taskPopup, setTaskPopup] = useState(false);
+
+  const handlePopup = () => {
+    setTaskPopup(!taskPopup);
+  };
+
+  return (
+    <>
+        {taskPopup && <TaskItemPopup title={task.title} text={task.text} handlePopup={handlePopup} />}
+        <li onClick={(e) => {
+          setTaskPopup(true);
+          e.stopPropagation();  // Fancy! (Prevents the clickbox associated with the 'day' from appearing)
+        }}>{task.title}</li>
+    </>
+
+  );
+}
+
 const Calendar = ({ onShowPopup }) => {
   return (
     <section className='section-calendar'>
@@ -77,7 +111,7 @@ const Calendar = ({ onShowPopup }) => {
             <h3>{ item.day }</h3>
             <ul>
               { item.tasks.map((task) => {
-                return <li key={task.id}>{task.title}</li>
+                return <TaskItem key={task.id} task={task} />
               })}
             </ul>
           </div>
