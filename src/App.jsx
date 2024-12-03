@@ -20,16 +20,37 @@ const Header = ({ weekStart, weekEnd }) => {
 }
 
 const Popup = ({ day, onPopupSubmit }) => {
+  // const styled = {position: 'absolute', top: '50%', left: '50%', backgroundColor: 'gold' };
+  const styled = {position: 'absolute', top: '40%', left: '40%', backgroundColor: 'gold' };
+  const [title, setTitle] = useState('');
+  const [text, setText] = useState('');
+
+  const handleTitle = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const handleText = (e) => {
+    setText(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    onPopupSubmit(title, text);
+  };
+
   return (
-    <section style={{position: 'absolute', top: '50%', left: '50%', backgroundColor: 'gold' }}>
+    <section style={styled}>
       <h2>Add task for {day}</h2>
-      <label>Title</label>
-      <input type="text" name="taskTitle" id="input-task-title" />
-      <label>Description</label>
-      <input type="text" name='taskText' id='input-task-text'/>
-      <button onClick={() => onPopupSubmit()}>Add</button>
+      <form onSubmit={handleSubmit}>
+        <label>Title</label>
+        <input type="text" name="taskTitle" id="input-task-title" value={title} onChange={handleTitle} />
+        <label>Description</label>
+        <input type="text" name='taskText' id='input-task-text' value={text} onChange={handleText}/>
+        <button type='submit'>Add</button>
+      </form>
     </section>
-  )
+  );
 }
 
 const Calendar = ({ onShowPopup }) => {
@@ -69,10 +90,24 @@ const App = () => {
     setShowPopup(true)
   }
 
-  const handlePopupSubmit = () => {
+  const handlePopupSubmit = ( title, text ) => {
     console.log('Submitted!')
-    setDay('')
-    setShowPopup(false)
+    
+    // Add form input to 'data'
+    if (title !== '' && text !== '') {
+      let dayIndex = days.indexOf(day); // Get day index - 0 Sunday, 6 Saturday
+      const newTask = {                 // Create new task
+        id: generateSimpleId(),
+        title: title,
+        text: text,
+      };
+
+      // Add task
+      data[dayIndex].tasks.push(newTask);
+    }
+
+    setDay('');
+    setShowPopup(false);
   }
 
   return (
@@ -151,5 +186,7 @@ const data = [
     ]
   },
 ]
+
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default App
