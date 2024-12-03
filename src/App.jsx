@@ -1,9 +1,24 @@
 import { useState } from 'react'
 import './App.css'
 
+// Helper function to generate unique task ids
 function generateSimpleId() {
   let id = Math.random().toString(36).substr(2, 9); // Generates a 9-character alphanumeric string
   return id
+}
+
+// Helper function to generate week strings based off current
+function generateWeekStrings() {
+  const curr = new Date;
+  const month = curr.getMonth() + 1;
+  const year = curr.getFullYear();
+  const first = curr.getDate() - curr.getDay();
+  const last = first + 6;
+
+  const first_f = month + '/' + first + '/' + year;
+  const last_f = month + '/' + last + '/' + year;
+
+  return [first_f, last_f];
 }
 
 const Header = ({ weekStart, weekEnd }) => {
@@ -75,15 +90,7 @@ const Calendar = ({ onShowPopup }) => {
 const App = () => {
   const [showPopup, setShowPopup] = useState(false)
   const [day, setDay] = useState('')
-
-  const curr = new Date
-  const month = curr.getMonth() + 1
-  const year = curr.getFullYear()
-  const first = curr.getDate() - curr.getDay()
-  const last = first + 6
-
-  const first_f = month + '/' + first + '/' + year
-  const last_f = month + '/' + last + '/' + year
+  const [first_f, last_f] = generateWeekStrings();
 
   const handleShowPopup = (day) => {
     setDay(day)
@@ -91,8 +98,6 @@ const App = () => {
   }
 
   const handlePopupSubmit = ( title, text ) => {
-    console.log('Submitted!')
-    
     // Add form input to 'data'
     if (title !== '' && text !== '') {
       let dayIndex = days.indexOf(day); // Get day index - 0 Sunday, 6 Saturday
@@ -106,6 +111,7 @@ const App = () => {
       data[dayIndex].tasks.push(newTask);
     }
 
+    // Reset relevant states
     setDay('');
     setShowPopup(false);
   }
