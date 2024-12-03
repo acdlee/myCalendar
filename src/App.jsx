@@ -90,8 +90,8 @@ const data = [
     tasks: [
       {
         id: generateSimpleId(),
-        title: "Go to store",
-        text: "Go to store and get grocceries",
+        title: "Go to pet store",
+        text: "Get pet supplies.",
       }
     ]
   },
@@ -100,8 +100,8 @@ const data = [
     tasks: [
       {
         id: generateSimpleId(),
-        title: "Go to store",
-        text: "Go to store and get grocceries",
+        title: "Go to movies",
+        text: "Go see a cool movie.",
       }
     ]
   },  {
@@ -109,8 +109,8 @@ const data = [
     tasks: [
       {
         id: generateSimpleId(),
-        title: "Go to store",
-        text: "Go to store and get grocceries",
+        title: "Go to lunch",
+        text: "Go have lunch with a friend.",
       }
     ]
   },  {
@@ -118,8 +118,8 @@ const data = [
     tasks: [
       {
         id: generateSimpleId(),
-        title: "Go to store",
-        text: "Go to store and get grocceries",
+        title: "Sleep in",
+        text: "Make sure to sleep in this day.",
       }
     ]
   },  {
@@ -127,8 +127,8 @@ const data = [
     tasks: [
       {
         id: generateSimpleId(),
-        title: "Go to store",
-        text: "Go to store and get grocceries",
+        title: "Repair car",
+        text: "Go to car repair shop.",
       }
     ]
   },  {
@@ -136,8 +136,8 @@ const data = [
     tasks: [
       {
         id: generateSimpleId(),
-        title: "Go to store",
-        text: "Go to store and get grocceries",
+        title: "Pay bills",
+        text: "Make sure you pay bills today.",
       }
     ]
   },  {
@@ -145,8 +145,8 @@ const data = [
     tasks: [
       {
         id: generateSimpleId(),
-        title: "Go to store",
-        text: "Go to store and get grocceries",
+        title: "Day off",
+        text: "Today is your day off.",
       }
     ]
   },

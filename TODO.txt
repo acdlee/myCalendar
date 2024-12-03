@@ -1,0 +1,8 @@
+TODO:
+1. Add text area for writing weekly notes
+2. Implement add task functionality
+
+
+
+n. Add finished styles
+n1. Condense tasks listed passed a certain number
