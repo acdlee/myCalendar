@@ -1,5 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import './App.css'
+
+const API_URL = "https://api.weather.gov/gridpoints/TOP/";
+const API_ENDPOINT = "/forecast";
 
 // Helper function to generate unique task ids
 function generateSimpleId() {
@@ -21,13 +24,140 @@ function generateWeekStrings() {
   return [first_f, last_f];
 }
 
-const Header = ({ weekStart, weekEnd }) => {
+// Helper function to get the name of the current day
+function generateTodayString() {
+  const d = new Date();
+  return days[d.getDay()];
+}
+
+// Helper function defining a custom sort based off day names
+function sortDays(dayA, dayB) {
+  let a = '', b = '';
+
+  // Edge case: generate day name for string not found in 'days'
+  (!days.includes(dayA.dayName)) ? a = days.indexOf(generateTodayString()) : a = days.indexOf(dayA.dayName);
+  (!days.includes(dayB.dayName)) ? b = days.indexOf(generateTodayString()) : b = days.indexOf(dayB.dayName);
+
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0;
+}
+
+const weatherReducer = (state, action) => {
+  switch(action.type) {
+    case 'WEATHER_FETCH_SUCCESS':
+      let tempData = [];
+
+      // console.log(JSON.stringify(action.payload));
+      console.log("Gathering data...");
+      
+      // Iterate over the payload data
+      action.payload.forEach(day => {
+        if ((day.name.toLowerCase().indexOf("night") === -1)) {  // Exclude night data
+          tempData.push({        // Create a data object for each day
+            dayName: day.name,
+            forecast: day.detailedForecast,
+            icon: day.icon,
+          })
+        }
+      });
+
+      // sort the days
+      tempData.sort(sortDays);
+
+      // console.log(JSON.stringify(tempData));
+
+      // return the new data
+      return {
+        data: tempData,
+        isLoaded: true,
+      };
+    case 'WEATHER_FETCH_FAILURE':
+      console.log("Failure fetch - weather");
+      return {
+        ...state
+      };
+    default:
+      throw new Error();
+  }
+}
+
+const App = () => {
+  const [showPopup, setShowPopup] = useState(false)
+  const [day, setDay] = useState('')
+  const [first_f, last_f] = generateWeekStrings();
+  const [location, setLocation] = useState('39,76');
+  const [weather, dispatchWeather] = useReducer(
+    weatherReducer,
+    {data: [], isLoaded: false}
+  );
+
+  useEffect(() => {
+    fetch(API_URL + location + API_ENDPOINT)
+      .then((response) => response.json())
+      .then((result) => {
+        dispatchWeather({
+          type: 'WEATHER_FETCH_SUCCESS',
+          payload: result.properties.periods,
+        })
+      })
+      .catch(() => {
+        dispatchWeather({
+          type: 'WEATHER_FETCH_FAILURE',
+        })
+      })
+  }, [location])
+
+  const handleLocation = (locationString) => {
+    console.log('hit');
+    if (locationString.length >= 5) {
+      const values = locationString.split(' ');
+      setLocation(locationString);
+    }
+  }
+
+  const handleShowPopup = (day) => {
+    setDay(day)
+    setShowPopup(true)
+  }
+
+  const handlePopupSubmit = ( title, text ) => {
+    // Add form input to 'data'
+    if (title !== '' && text !== '') {
+      let dayIndex = days.indexOf(day); // Get day index - 0 Sunday, 6 Saturday
+      const newTask = {                 // Create new task
+        id: generateSimpleId(),
+        title: title,
+        text: text,
+      };
+
+      // Add task
+      data[dayIndex].tasks.push(newTask);
+    }
+
+    // Reset relevant states
+    setDay('');
+    setShowPopup(false);
+  }
+
+  return (
+    <section className='main'>
+      <Header weekStart={first_f} weekEnd={last_f} onLocationChange={handleLocation} />
+      { showPopup && <Popup day={day} onPopupSubmit={handlePopupSubmit} /> }
+      <Calendar onShowPopup={handleShowPopup} weather={weather} />
+      <Notes />
+    </section>
+  )
+}
+
+const Header = ({ weekStart, weekEnd, onLocationChange }) => {
   return (
     <section className='section-header'>
       <div className='header-h1-location-container'>
         <h1>MyCalendar</h1>
-        <label>Location: </label>
-        <input type="text" />
+        <label>Lat Long: </label>
+        <input type="text" onChange={(e) => onLocationChange(e.target.value)} />
+        <span style={{color: "red"}}>&lt;Lat Long&gt;</span>
       </div>
       <p>Week: {weekStart} - {weekEnd}</p>
     </section>
@@ -103,18 +233,32 @@ const TaskItem = ({ task }) => {
   );
 }
 
-const Calendar = ({ onShowPopup }) => {
+const Calendar = ({ onShowPopup, weather }) => {
+  let weatherDataIter = 0;  // Variable to help iterate through the weather data
+  
+  // console.log(JSON.stringify(weather));
+  // if (weather.isLoaded) {
+  //   for (let i  = 0; i < 7; i++) {
+  //     console.log(`${i} ${weather.data[i].icon}`);
+  //   }
+  // }
+
+
   return (
     <section className='section-calendar'>
       { data.map((item) => {
         return (
           <div key={ item.day } onClick={() => {onShowPopup(item.day)}}>
-            <h3>{ item.day }</h3>
+            <h3>
+              { item.day }
+              {weather.isLoaded && <img src={weather.data[weatherDataIter].icon} alt="Weather icon" />}
+            </h3>
             <ul>
               { item.tasks.map((task) => {
                 return <TaskItem key={task.id} task={task} />
               })}
             </ul>
+            {weather.isLoaded && <p>{weather.data[weatherDataIter++].forecast}</p>}
           </div>
         )
       })}
@@ -129,45 +273,6 @@ const Notes = ({}) => {
       <textarea name="notes" id="notes" rows="5" cols="33">Write your weekly notes here...</textarea>
     </section>
   );
-}
-
-const App = () => {
-  const [showPopup, setShowPopup] = useState(false)
-  const [day, setDay] = useState('')
-  const [first_f, last_f] = generateWeekStrings();
-
-  const handleShowPopup = (day) => {
-    setDay(day)
-    setShowPopup(true)
-  }
-
-  const handlePopupSubmit = ( title, text ) => {
-    // Add form input to 'data'
-    if (title !== '' && text !== '') {
-      let dayIndex = days.indexOf(day); // Get day index - 0 Sunday, 6 Saturday
-      const newTask = {                 // Create new task
-        id: generateSimpleId(),
-        title: title,
-        text: text,
-      };
-
-      // Add task
-      data[dayIndex].tasks.push(newTask);
-    }
-
-    // Reset relevant states
-    setDay('');
-    setShowPopup(false);
-  }
-
-  return (
-    <section className='main'>
-      <Header weekStart={first_f} weekEnd={last_f} />
-      { showPopup && <Popup day={day} onPopupSubmit={handlePopupSubmit} /> }
-      <Calendar onShowPopup={handleShowPopup} />
-      <Notes />
-    </section>
-  )
 }
 
 const data = [
