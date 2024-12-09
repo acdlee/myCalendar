@@ -1,6 +1,8 @@
 TODO:
 1. Add text area for writing weekly notes
 2. Implement add task functionality
+3. Delete task functionality
+4. Location functionality
 
 
 

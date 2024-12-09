@@ -71,6 +71,7 @@ const Popup = ({ day, onPopupSubmit }) => {
 const TaskItemPopup = ({ title, text, handlePopup }) => {
   const handleClose = (e) => {
     e.preventDefault();
+    e.stopPropagation();  // Fancy! (Prevents the clickbox associated with the 'day' from appearing)
     handlePopup();
   }
 
@@ -121,6 +122,15 @@ const Calendar = ({ onShowPopup }) => {
   )
 }
 
+const Notes = ({}) => {
+  return (
+    <section>
+      <label>Weekly Notes:</label><br />
+      <textarea name="notes" id="notes" rows="5" cols="33">Write your weekly notes here...</textarea>
+    </section>
+  );
+}
+
 const App = () => {
   const [showPopup, setShowPopup] = useState(false)
   const [day, setDay] = useState('')
@@ -155,6 +165,7 @@ const App = () => {
       <Header weekStart={first_f} weekEnd={last_f} />
       { showPopup && <Popup day={day} onPopupSubmit={handlePopupSubmit} /> }
       <Calendar onShowPopup={handleShowPopup} />
+      <Notes />
     </section>
   )
 }
