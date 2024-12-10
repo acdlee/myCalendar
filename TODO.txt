@@ -1,10 +1,9 @@
 TODO:
-1. Quick wgs location test
-1.5 wgs regex
 2. Refactor code
 3. Delete task functionality
 4. weather report popup
 5. Condense tasks listed passed a certain number
 
 
+. Add test code (at least 1 or two cases)
 . Add finished styles

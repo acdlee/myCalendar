@@ -1,55 +1,22 @@
-import { useEffect, useReducer, useState } from 'react'
-import './App.css'
+import { useEffect, useReducer, useState } from 'react';
+import Header from './components/Header.jsx';
+import Popup from './components/Popup.jsx';
+import Calendar from './components/Calendar.jsx';
+import Notes from './components/Notes.jsx';
+
+import { 
+  generateSimpleId, 
+  generateWeekStrings, 
+  generateTodayString,
+  validateLocation,
+  sortDays } from './util/util.js';
+
+import './App.css';
 
 // 40.280,-75.300 - wgs test hatfield
 // 39.070,-76.546 - sevena park
 
 const API_URL = "https://api.weather.gov/points/";
-
-// Helper function to generate unique task ids
-function generateSimpleId() {
-  let id = Math.random().toString(36).substr(2, 9); // Generates a 9-character alphanumeric string
-  return id
-}
-
-// Helper function to generate week strings based off current
-function generateWeekStrings() {
-  const curr = new Date;
-  const month = curr.getMonth() + 1;
-  const year = curr.getFullYear();
-  const first = curr.getDate() - curr.getDay();
-  const last = first + 6;
-
-  const first_f = month + '/' + first + '/' + year;
-  const last_f = month + '/' + last + '/' + year;
-
-  return [first_f, last_f];
-}
-
-// Helper function to get the name of the current day
-function generateTodayString() {
-  const d = new Date();
-  return days[d.getDay()];
-}
-
-// Helper function to validate location (of the form Lat,Long)
-function validateLocation(locationString) {
-  const pattern = /-?\d+\.*\d*,-?\d+\.*\d*/;
-  return pattern.test(locationString);
-}
-
-// Helper function defining a custom sort based off day names
-function sortDays(dayA, dayB) {
-  let a = '', b = '';
-
-  // Edge case: generate day name for string not found in 'days'
-  (!days.includes(dayA.dayName)) ? a = days.indexOf(generateTodayString()) : a = days.indexOf(dayA.dayName);
-  (!days.includes(dayB.dayName)) ? b = days.indexOf(generateTodayString()) : b = days.indexOf(dayB.dayName);
-
-  if (a < b) return -1;
-  if (a > b) return 1;
-  return 0;
-}
 
 const weatherReducer = (state, action) => {
   switch(action.type) {
@@ -102,32 +69,32 @@ const App = () => {
     {data: [], isLoaded: false}
   );
 
-  useEffect(() => {
-    fetch(API_URL + location)
-      .then((response) => response.json())
-      // find the forecast url
-      .then((result) => {
-        const forecastUrl = result.properties.forecast;
-        fetch(forecastUrl)
-          .then((response) => response.json())
-          .then((result) => {
-            dispatchWeather({
-              type: 'WEATHER_FETCH_SUCCESS',
-              payload: result.properties.periods,
-            })
-          })
-          .catch(() => {
-            dispatchWeather({
-              type: 'WEATHER_FETCH_FAILURE',
-            })
-          })
-      })
-      .catch(() => {
-        dispatchWeather({
-          type: 'WEATHER_FETCH_POINTS_FAILURE',
-        })
-      })
-  }, [location])
+  // useEffect(() => {
+  //   fetch(API_URL + location)
+  //     .then((response) => response.json())
+  //     // find the forecast url
+  //     .then((result) => {
+  //       const forecastUrl = result.properties.forecast;
+  //       fetch(forecastUrl)
+  //         .then((response) => response.json())
+  //         .then((result) => {
+  //           dispatchWeather({
+  //             type: 'WEATHER_FETCH_SUCCESS',
+  //             payload: result.properties.periods,
+  //           })
+  //         })
+  //         .catch(() => {
+  //           dispatchWeather({
+  //             type: 'WEATHER_FETCH_FAILURE',
+  //           })
+  //         })
+  //     })
+  //     .catch(() => {
+  //       dispatchWeather({
+  //         type: 'WEATHER_FETCH_POINTS_FAILURE',
+  //       })
+  //     })
+  // }, [location])
 
   const handleLocation = (locationString) => {
     console.log(locationString);
@@ -151,6 +118,8 @@ const App = () => {
         text: text,
       };
 
+      console.log(JSON.stringify(newTask));
+
       // Add task
       data[dayIndex].tasks.push(newTask);
     }
@@ -168,137 +137,6 @@ const App = () => {
       <Notes />
     </section>
   )
-}
-
-const Header = ({ weekStart, weekEnd, onLocationChange }) => {
-  const [inputValue, setInputValue] = useState('39,76');
-
-  const handleButtonClick = (e) => {
-    e.preventDefault();
-    onLocationChange(inputValue);
-  }
-
-  return (
-    <section className='section-header'>
-      <div className='header-h1-location-container'>
-        <h1>MyCalendar</h1>
-        <label>Lat Long: </label>
-        <input type="text" onChange={(e) => setInputValue(e.target.value)} />
-        <span style={{color: "red"}}>&lt;WGS 84 Coordinate&gt;</span>
-        <button onClick={(e) => {handleButtonClick(e)}}>Submit</button>
-      </div>
-      <p>Week: {weekStart} - {weekEnd}</p>
-    </section>
-  )
-}
-
-const Popup = ({ day, onPopupSubmit }) => {
-  // const styled = {position: 'absolute', top: '50%', left: '50%', backgroundColor: 'gold' };
-  const styled = {position: 'absolute', top: '40%', left: '40%', backgroundColor: 'gold' };
-  const [title, setTitle] = useState('');
-  const [text, setText] = useState('');
-
-  const handleTitle = (e) => {
-    setTitle(e.target.value);
-  };
-
-  const handleText = (e) => {
-    setText(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    onPopupSubmit(title, text);
-  };
-
-  return (
-    <section style={styled}>
-      <h2>Add task for {day}</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Title</label>
-        <input type="text" name="taskTitle" id="input-task-title" value={title} onChange={handleTitle} />
-        <label>Description</label>
-        <input type="text" name='taskText' id='input-task-text' value={text} onChange={handleText}/>
-        <button type='submit'>Add</button>
-      </form>
-    </section>
-  );
-}
-
-const TaskItemPopup = ({ title, text, handlePopup }) => {
-  const handleClose = (e) => {
-    e.preventDefault();
-    e.stopPropagation();  // Fancy! (Prevents the clickbox associated with the 'day' from appearing)
-    handlePopup();
-  }
-
-  return (
-    <div className='div-task-item-popup'>
-      <button onClick={handleClose}>X</button>
-      <h3>{title}</h3>
-      <p>{text}</p>
-    </div>
-  );
-}
-
-const TaskItem = ({ task }) => {
-  const [taskPopup, setTaskPopup] = useState(false);
-
-  const handlePopup = () => {
-    setTaskPopup(!taskPopup);
-  };
-
-  return (
-    <>
-        {taskPopup && <TaskItemPopup title={task.title} text={task.text} handlePopup={handlePopup} />}
-        <li onClick={(e) => {
-          setTaskPopup(true);
-          e.stopPropagation();  // Fancy! (Prevents the clickbox associated with the 'day' from appearing)
-        }}>{task.title}</li>
-    </>
-
-  );
-}
-
-const Calendar = ({ onShowPopup, weather }) => {
-  let weatherDataIter = 0;  // Variable to help iterate through the weather data
-
-  return (
-    <section className='section-calendar'>
-      { data.map((item) => {
-        return (
-          <div key={ item.day } onClick={() => {onShowPopup(item.day)}}>
-            <h3>
-              { item.day }
-              {weather.isLoaded && <img src={weather.data[weatherDataIter].icon} alt="Weather icon" />}
-            </h3>
-            <ul>
-              { item.tasks.map((task) => {
-                return <TaskItem key={task.id} task={task} />
-              })}
-            </ul>
-            {weather.isLoaded && <p>{weather.data[weatherDataIter++].forecast}</p>}
-          </div>
-        )
-      })}
-    </section>
-  )
-}
-
-const Notes = ({}) => {
-  const [textValue, setTextValue] = useState('Write your weekly notes here...');
-
-  const handleTextChange = (e) => {
-    setTextValue(e.target.value);
-  }
-
-  return (
-    <section>
-      <label>Weekly Notes:</label><br />
-      <textarea value={textValue} onChange={(e) => handleTextChange(e)} name="notes" id="notes" rows="5" cols="33"></textarea>
-    </section>
-  );
 }
 
 const data = [
