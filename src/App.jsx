@@ -1,7 +1,8 @@
 import { useEffect, useReducer, useState } from 'react'
 import './App.css'
 
-//40.280,-75.300 - wgs test hatfield
+// 40.280,-75.300 - wgs test hatfield
+// 39.070,-76.546 - sevena park
 
 const API_URL = "https://api.weather.gov/points/";
 
@@ -34,7 +35,6 @@ function generateTodayString() {
 // Helper function to validate location (of the form Lat,Long)
 function validateLocation(locationString) {
   const pattern = /-?\d+\.*\d*,-?\d+\.*\d*/;
-  console.log(pattern.test(locationString));
   return pattern.test(locationString);
 }
 
@@ -56,7 +56,6 @@ const weatherReducer = (state, action) => {
     case 'WEATHER_FETCH_SUCCESS':
       let tempData = [];
 
-      // console.log(JSON.stringify(action.payload));
       console.log("Gathering data...");
       
       // Iterate over the payload data
@@ -72,8 +71,6 @@ const weatherReducer = (state, action) => {
 
       // sort the days
       tempData.sort(sortDays);
-
-      // console.log(JSON.stringify(tempData));
 
       // return the new data
       return {
@@ -111,7 +108,6 @@ const App = () => {
       // find the forecast url
       .then((result) => {
         const forecastUrl = result.properties.forecast;
-        // console.log(forecastUrl);
         fetch(forecastUrl)
           .then((response) => response.json())
           .then((result) => {
@@ -267,14 +263,6 @@ const TaskItem = ({ task }) => {
 
 const Calendar = ({ onShowPopup, weather }) => {
   let weatherDataIter = 0;  // Variable to help iterate through the weather data
-  
-  // console.log(JSON.stringify(weather));
-  // if (weather.isLoaded) {
-  //   for (let i  = 0; i < 7; i++) {
-  //     console.log(`${i} ${weather.data[i].icon}`);
-  //   }
-  // }
-
 
   return (
     <section className='section-calendar'>
