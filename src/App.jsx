@@ -18,12 +18,39 @@ import './App.css';
 
 const API_URL = "https://api.weather.gov/points/";
 
+const taskReducer = (state, action) => {
+  switch(action.type) {
+    case 'INIT_TASK_DATA':
+      return {
+        ...state,
+        data: data,
+        isLoaded: true,
+      };
+    case 'ADD_NEW_TASK':
+      // Grab relevant data from payload
+      const newTask = action.payload.task;
+      const dayIndex = action.payload.dayIndex;
+
+      // Create a new state variable and add new task
+      const updated = JSON.parse(JSON.stringify(state.data)); // Deep copy :)
+      updated[dayIndex].tasks.push(newTask);
+
+      // Return the new state
+      return {
+        ...state,
+        data: updated,
+      };
+    default:
+      throw new Error();
+  }
+}
+
 const weatherReducer = (state, action) => {
   switch(action.type) {
     case 'WEATHER_FETCH_SUCCESS':
       let tempData = [];
 
-      console.log("Gathering data...");
+      console.log("Gathering weather data...");
       
       // Iterate over the payload data
       action.payload.forEach(day => {
@@ -36,10 +63,10 @@ const weatherReducer = (state, action) => {
         }
       });
 
-      // sort the days
+      // Sort the days
       tempData.sort(sortDays);
 
-      // return the new data
+      // Return the new state
       return {
         data: tempData,
         isLoaded: true,
@@ -68,36 +95,45 @@ const App = () => {
     weatherReducer,
     {data: [], isLoaded: false}
   );
+  const [taskData, dispatchTaskData] = useReducer(
+    taskReducer,
+    {data: [], isLoaded: false}
+  );
 
-  // useEffect(() => {
-  //   fetch(API_URL + location)
-  //     .then((response) => response.json())
-  //     // find the forecast url
-  //     .then((result) => {
-  //       const forecastUrl = result.properties.forecast;
-  //       fetch(forecastUrl)
-  //         .then((response) => response.json())
-  //         .then((result) => {
-  //           dispatchWeather({
-  //             type: 'WEATHER_FETCH_SUCCESS',
-  //             payload: result.properties.periods,
-  //           })
-  //         })
-  //         .catch(() => {
-  //           dispatchWeather({
-  //             type: 'WEATHER_FETCH_FAILURE',
-  //           })
-  //         })
-  //     })
-  //     .catch(() => {
-  //       dispatchWeather({
-  //         type: 'WEATHER_FETCH_POINTS_FAILURE',
-  //       })
-  //     })
-  // }, [location])
+  useEffect(() => {
+    fetch(API_URL + location)
+      .then((response) => response.json())
+      // find the forecast url
+      .then((result) => {
+        const forecastUrl = result.properties.forecast;
+        fetch(forecastUrl)
+          .then((response) => response.json())
+          .then((result) => {
+            dispatchWeather({
+              type: 'WEATHER_FETCH_SUCCESS',
+              payload: result.properties.periods,
+            })
+          })
+          .catch(() => {
+            dispatchWeather({
+              type: 'WEATHER_FETCH_FAILURE',
+            })
+          })
+      })
+      .catch(() => {
+        dispatchWeather({
+          type: 'WEATHER_FETCH_POINTS_FAILURE',
+        })
+      })
+  }, [location])
+
+  useEffect(() => {
+    dispatchTaskData({
+      type: "INIT_TASK_DATA",
+    })
+  }, [])
 
   const handleLocation = (locationString) => {
-    console.log(locationString);
     if (validateLocation(locationString)) {
       setLocation(locationString);
     }
@@ -118,10 +154,14 @@ const App = () => {
         text: text,
       };
 
-      console.log(JSON.stringify(newTask));
-
       // Add task
-      data[dayIndex].tasks.push(newTask);
+      dispatchTaskData({
+        type: "ADD_NEW_TASK",
+        payload: {
+          task: newTask,
+          dayIndex: dayIndex,
+        }
+      });
     }
 
     // Reset relevant states
@@ -133,7 +173,7 @@ const App = () => {
     <section className='main'>
       <Header weekStart={first_f} weekEnd={last_f} onLocationChange={handleLocation} />
       { showPopup && <Popup day={day} onPopupSubmit={handlePopupSubmit} /> }
-      <Calendar onShowPopup={handleShowPopup} weather={weather} />
+      <Calendar onShowPopup={handleShowPopup} weather={weather} tasks={taskData} />
       <Notes />
     </section>
   )

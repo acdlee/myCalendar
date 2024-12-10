@@ -17,7 +17,6 @@ const Popup = ({ day, onPopupSubmit }) => {
     const handleSubmit = (e) => {
       e.preventDefault();
       
-      console.log(title, text);
       onPopupSubmit(title, text);
     };
   
