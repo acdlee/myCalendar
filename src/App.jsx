@@ -1,6 +1,8 @@
 import { useEffect, useReducer, useState } from 'react'
 import './App.css'
 
+//40.280,-75.300 - wgs test hatfield
+
 const API_URL = "https://api.weather.gov/points/";
 
 // Helper function to generate unique task ids
@@ -31,7 +33,7 @@ function generateTodayString() {
 
 // Helper function to validate location (of the form Lat,Long)
 function validateLocation(locationString) {
-  const pattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
+  const pattern = /-?\d+\.*\d*,-?\d+\.*\d*/;
   console.log(pattern.test(locationString));
   return pattern.test(locationString);
 }
