@@ -45,10 +45,17 @@ function sortDays(dayA, dayB) {
     return 0;
 }
 
+// Helper function to generate day index given a day string
+// Example: "Sunday" returns '0'
+function generateDayIndex(day) {
+    return days.indexOf(day);
+}
+
 export { 
     generateSimpleId, 
     generateWeekStrings, 
     generateTodayString,
     validateLocation,
     sortDays,
+    generateDayIndex,
 }

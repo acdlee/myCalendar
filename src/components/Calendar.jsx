@@ -1,7 +1,7 @@
 import TaskItem from './TaskItem.jsx';
 import { generateSimpleId } from '../util/util.js';
 
-const Calendar = ({ onShowPopup, weather, tasks }) => {
+const Calendar = ({ onShowPopup, onDeleteTask, weather, tasks }) => {
     let weatherDataIter = 0;  // Variable to help iterate through the weather data
   
     return (
@@ -15,7 +15,7 @@ const Calendar = ({ onShowPopup, weather, tasks }) => {
               </h3>
               <ul>
                 { item.tasks.map((task) => {
-                  return <TaskItem key={task.id} task={task} />
+                  return <TaskItem key={task.id} onDeleteTask={onDeleteTask} day={item.day} task={task} />
                 })}
               </ul>
               {weather.isLoaded && <p>{weather.data[weatherDataIter++].forecast}</p>}

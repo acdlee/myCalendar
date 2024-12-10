@@ -9,7 +9,8 @@ import {
   generateWeekStrings, 
   generateTodayString,
   validateLocation,
-  sortDays } from './util/util.js';
+  sortDays,
+  generateDayIndex } from './util/util.js';
 
 import './App.css';
 
@@ -29,17 +30,38 @@ const taskReducer = (state, action) => {
     case 'ADD_NEW_TASK':
       // Grab relevant data from payload
       const newTask = action.payload.task;
-      const dayIndex = action.payload.dayIndex;
+      let dayIndex = action.payload.dayIndex;
 
       // Create a new state variable and add new task
-      const updated = JSON.parse(JSON.stringify(state.data)); // Deep copy :)
-      updated[dayIndex].tasks.push(newTask);
+      const addUpdated = JSON.parse(JSON.stringify(state.data)); // Deep copy :)
+      addUpdated[dayIndex].tasks.push(newTask);
 
       // Return the new state
       return {
         ...state,
-        data: updated,
+        data: addUpdated,
       };
+    case "DELETE_TASK":
+      // Grab relevant data from payload
+      const targetId = action.payload.taskId;
+      let deleteDayIndex = action.payload.dayIndex;
+
+      let i;  // Variable to help with delete
+      // Create a new state and find the index (i) to delete
+      const deleteUpdated = JSON.parse(JSON.stringify(state.data)); // Deep copy :)
+      const targetIndex = deleteUpdated[deleteDayIndex].tasks.map((task, index) => {
+        if (task.id === targetId) {
+          i = index;
+        }
+      })
+
+      // Delete task
+      deleteUpdated[deleteDayIndex].tasks.splice(i, 1);
+
+      return {
+        ...state,
+        data: deleteUpdated,
+      }
     default:
       throw new Error();
   }
@@ -169,11 +191,24 @@ const App = () => {
     setShowPopup(false);
   }
 
+  const handleDeleteTask = (taskId, day) => {
+    if (taskId) {
+      // Delete task
+      dispatchTaskData({
+        type: "DELETE_TASK",
+        payload: {
+          taskId: taskId,
+          dayIndex: generateDayIndex(day),
+        }
+      });
+    }
+  }
+
   return (
     <section className='main'>
       <Header weekStart={first_f} weekEnd={last_f} onLocationChange={handleLocation} />
       { showPopup && <Popup day={day} onPopupSubmit={handlePopupSubmit} /> }
-      <Calendar onShowPopup={handleShowPopup} weather={weather} tasks={taskData} />
+      <Calendar onShowPopup={handleShowPopup} onDeleteTask={handleDeleteTask} weather={weather} tasks={taskData} />
       <Notes />
     </section>
   )
