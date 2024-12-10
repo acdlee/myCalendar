@@ -1,5 +1,4 @@
 TODO:
-2. Refactor code
 3. Delete task functionality
 4. weather report popup
 5. Condense tasks listed passed a certain number
