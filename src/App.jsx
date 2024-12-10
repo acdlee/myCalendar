@@ -1,8 +1,7 @@
 import { useEffect, useReducer, useState } from 'react'
 import './App.css'
 
-const API_URL = "https://api.weather.gov/gridpoints/TOP/";
-const API_ENDPOINT = "/forecast";
+const API_URL = "https://api.weather.gov/points/";
 
 // Helper function to generate unique task ids
 function generateSimpleId() {
@@ -28,6 +27,13 @@ function generateWeekStrings() {
 function generateTodayString() {
   const d = new Date();
   return days[d.getDay()];
+}
+
+// Helper function to validate location (of the form Lat,Long)
+function validateLocation(locationString) {
+  const pattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
+  console.log(pattern.test(locationString));
+  return pattern.test(locationString);
 }
 
 // Helper function defining a custom sort based off day names
@@ -77,6 +83,11 @@ const weatherReducer = (state, action) => {
       return {
         ...state
       };
+    case 'WEATHER_FETCH_POINTS_FAILURE':
+      console.log("Failure fetch - endpoint /points");
+      return {
+        ...state
+      };
     default:
       throw new Error();
   }
@@ -86,32 +97,43 @@ const App = () => {
   const [showPopup, setShowPopup] = useState(false)
   const [day, setDay] = useState('')
   const [first_f, last_f] = generateWeekStrings();
-  const [location, setLocation] = useState('39,76');
+  const [location, setLocation] = useState('39.070,-76.546');
   const [weather, dispatchWeather] = useReducer(
     weatherReducer,
     {data: [], isLoaded: false}
   );
 
   useEffect(() => {
-    fetch(API_URL + location + API_ENDPOINT)
+    fetch(API_URL + location)
       .then((response) => response.json())
+      // find the forecast url
       .then((result) => {
-        dispatchWeather({
-          type: 'WEATHER_FETCH_SUCCESS',
-          payload: result.properties.periods,
-        })
+        const forecastUrl = result.properties.forecast;
+        // console.log(forecastUrl);
+        fetch(forecastUrl)
+          .then((response) => response.json())
+          .then((result) => {
+            dispatchWeather({
+              type: 'WEATHER_FETCH_SUCCESS',
+              payload: result.properties.periods,
+            })
+          })
+          .catch(() => {
+            dispatchWeather({
+              type: 'WEATHER_FETCH_FAILURE',
+            })
+          })
       })
       .catch(() => {
         dispatchWeather({
-          type: 'WEATHER_FETCH_FAILURE',
+          type: 'WEATHER_FETCH_POINTS_FAILURE',
         })
       })
   }, [location])
 
   const handleLocation = (locationString) => {
-    console.log('hit');
-    if (locationString.length >= 5) {
-      const values = locationString.split(' ');
+    console.log(locationString);
+    if (validateLocation(locationString)) {
       setLocation(locationString);
     }
   }
@@ -151,13 +173,21 @@ const App = () => {
 }
 
 const Header = ({ weekStart, weekEnd, onLocationChange }) => {
+  const [inputValue, setInputValue] = useState('39,76');
+
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    onLocationChange(inputValue);
+  }
+
   return (
     <section className='section-header'>
       <div className='header-h1-location-container'>
         <h1>MyCalendar</h1>
         <label>Lat Long: </label>
-        <input type="text" onChange={(e) => onLocationChange(e.target.value)} />
-        <span style={{color: "red"}}>&lt;Lat Long&gt;</span>
+        <input type="text" onChange={(e) => setInputValue(e.target.value)} />
+        <span style={{color: "red"}}>&lt;WGS 84 Coordinate&gt;</span>
+        <button onClick={(e) => {handleButtonClick(e)}}>Submit</button>
       </div>
       <p>Week: {weekStart} - {weekEnd}</p>
     </section>
@@ -267,10 +297,16 @@ const Calendar = ({ onShowPopup, weather }) => {
 }
 
 const Notes = ({}) => {
+  const [textValue, setTextValue] = useState('Write your weekly notes here...');
+
+  const handleTextChange = (e) => {
+    setTextValue(e.target.value);
+  }
+
   return (
     <section>
       <label>Weekly Notes:</label><br />
-      <textarea name="notes" id="notes" rows="5" cols="33">Write your weekly notes here...</textarea>
+      <textarea value={textValue} onChange={(e) => handleTextChange(e)} name="notes" id="notes" rows="5" cols="33"></textarea>
     </section>
   );
 }
