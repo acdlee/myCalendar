@@ -28,7 +28,8 @@ h1, h2, h3 {
 .section-popup-add-task input,
 li, 
 .div-task-item-popup, 
-label {
+label,
+textarea {
     font-family: "Parkinsans", sans-serif;
     color: var(--dark-gray-purple);
 }

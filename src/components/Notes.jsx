@@ -8,9 +8,9 @@ const Notes = ({}) => {
     }
   
     return (
-      <section>
-        <label>Weekly Notes:</label><br />
-        <textarea value={textValue} onChange={(e) => handleTextChange(e)} name="notes" id="notes" rows="5" cols="33"></textarea>
+      <section id="section-notes">
+        <label>Weekly Notes:</label>
+        <textarea value={textValue} onChange={(e) => handleTextChange(e)} name="notes" id="notes" rows="10" cols="200"></textarea>
       </section>
     );
 }
