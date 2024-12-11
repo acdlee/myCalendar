@@ -122,32 +122,32 @@ const App = () => {
     {data: [], isLoaded: false}
   );
 
-  // useEffect(() => {
-  //   fetch(API_URL + location)
-  //     .then((response) => response.json())
-  //     // find the forecast url
-  //     .then((result) => {
-  //       const forecastUrl = result.properties.forecast;
-  //       fetch(forecastUrl)
-  //         .then((response) => response.json())
-  //         .then((result) => {
-  //           dispatchWeather({
-  //             type: 'WEATHER_FETCH_SUCCESS',
-  //             payload: result.properties.periods,
-  //           })
-  //         })
-  //         .catch(() => {
-  //           dispatchWeather({
-  //             type: 'WEATHER_FETCH_FAILURE',
-  //           })
-  //         })
-  //     })
-  //     .catch(() => {
-  //       dispatchWeather({
-  //         type: 'WEATHER_FETCH_POINTS_FAILURE',
-  //       })
-  //     })
-  // }, [location])
+  useEffect(() => {
+    fetch(API_URL + location)
+      .then((response) => response.json())
+      // find the forecast url
+      .then((result) => {
+        const forecastUrl = result.properties.forecast;
+        fetch(forecastUrl)
+          .then((response) => response.json())
+          .then((result) => {
+            dispatchWeather({
+              type: 'WEATHER_FETCH_SUCCESS',
+              payload: result.properties.periods,
+            })
+          })
+          .catch(() => {
+            dispatchWeather({
+              type: 'WEATHER_FETCH_FAILURE',
+            })
+          })
+      })
+      .catch(() => {
+        dispatchWeather({
+          type: 'WEATHER_FETCH_POINTS_FAILURE',
+        })
+      })
+  }, [location])
 
   useEffect(() => {
     dispatchTaskData({

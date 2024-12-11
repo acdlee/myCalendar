@@ -11,14 +11,14 @@ const Calendar = ({ onShowPopup, onDeleteTask, weather, tasks }) => {
             <div className='calendar-item' key={ item.day } onClick={() => {onShowPopup(item.day)}}>
               <h3>
                 { item.day }
-                {weather.isLoaded && <img src={weather.data[weatherDataIter].icon} alt="Weather icon" />}
+                {weather.isLoaded && <img src={weather.data[weatherDataIter++].icon} alt="Weather icon" />}
               </h3>
               <ul>
                 { item.tasks.map((task) => {
                   return <TaskItem key={task.id} onDeleteTask={onDeleteTask} day={item.day} task={task} />
                 })}
               </ul>
-              {weather.isLoaded && <p>{weather.data[weatherDataIter++].forecast}</p>}
+              {/* {weather.isLoaded && <p>{weather.data[weatherDataIter++].forecast}</p>} */}
             </div>
           )
         })}

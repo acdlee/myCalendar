@@ -118,6 +118,13 @@
     font-weight: 500;
 }
 
+.section-calendar img {
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--dark-gray-purple);
+    border-radius: 5px;
+}
+
     /* CALENDAR POPUPS */
 .section-popup-add-task {
     position: absolute;
