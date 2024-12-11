@@ -18,13 +18,16 @@ import './App.css';
 // 39.070,-76.546 - sevena park
 
 const API_URL = "https://api.weather.gov/points/";
+const STORAGE_KEY = "taskData";
 
 const taskReducer = (state, action) => {
   switch(action.type) {
     case 'INIT_TASK_DATA':
+      let initData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || data;
+      // console.log(JSON.stringify(initData));
       return {
         ...state,
-        data: data,
+        data: initData,
         isLoaded: true,
       };
     case 'ADD_NEW_TASK':
@@ -35,6 +38,9 @@ const taskReducer = (state, action) => {
       // Create a new state variable and add new task
       const addUpdated = JSON.parse(JSON.stringify(state.data)); // Deep copy :)
       addUpdated[dayIndex].tasks.push(newTask);
+
+      // Update local storage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(addUpdated));
 
       // Return the new state
       return {
@@ -57,6 +63,9 @@ const taskReducer = (state, action) => {
 
       // Delete task
       deleteUpdated[deleteDayIndex].tasks.splice(i, 1);
+
+      // Update local storage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(deleteUpdated));
 
       return {
         ...state,
