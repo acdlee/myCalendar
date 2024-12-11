@@ -19,11 +19,16 @@ body {
     background-color: var(--bg-light-gray);
 }
 
-h1, h3 {
+h1, h2, h3 {
     font-family: 'Ubuntu', sans-serif;
 }
 
-.section-header, .section-header input, li, .div-task-item-popup {
+.section-header, 
+.section-header input,
+.section-popup-add-task input,
+li, 
+.div-task-item-popup, 
+label {
     font-family: "Parkinsans", sans-serif;
     color: var(--dark-gray-purple);
 }

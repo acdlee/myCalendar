@@ -123,3 +123,47 @@
     background-color: blanchedalmond;
     border: 1px solid plum;
 }
+
+.section-popup-add-task {
+    position: absolute;
+    width: 500px;
+    top: 40%;
+    left: 40%;
+    background-color: white;
+    padding: 1em;
+    border: 5px solid var(--dark-gray-purple);
+    border-radius: 10px;
+    text-align: left;
+}
+
+.section-popup-add-task h2 {
+    color: var(--gray-purple);
+    padding-bottom: .5em;
+}
+
+.section-popup-add-task form {
+    text-align: left;
+}
+
+.section-popup-add-task label {
+    font-weight: 500;
+    display: inline-block;
+    width: 50px;
+    margin-right: 1.5em;
+    margin-bottom: .5em;
+}
+
+.section-popup-add-task input {
+    margin-left: 2.5em;
+    width: 20em;
+    padding: .25em;
+    margin-bottom: .5em;
+    border: 1px solid var(--dark-gray-purple);
+    border-radius: 3px;
+}
+
+.section-popup-add-task button {
+    padding: 1em;
+    width: 5em;
+    margin: 1em auto;
+}

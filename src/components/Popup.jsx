@@ -1,8 +1,6 @@
 import { useState } from "react";
 
 const Popup = ({ day, onPopupSubmit }) => {
-    // const styled = {position: 'absolute', top: '50%', left: '50%', backgroundColor: 'gold' };
-    const styled = {position: 'absolute', top: '40%', left: '40%', backgroundColor: 'gold' };
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
   
@@ -21,14 +19,14 @@ const Popup = ({ day, onPopupSubmit }) => {
     };
   
     return (
-      <section style={styled}>
+      <section className="section-popup-add-task">
         <h2>Add task for {day}</h2>
         <form onSubmit={handleSubmit}>
-          <label>Title</label>
-          <input type="text" name="taskTitle" id="input-task-title" value={title} onChange={handleTitle} />
-          <label>Description</label>
-          <input type="text" name='taskText' id='input-task-text' value={text} onChange={handleText}/>
-          <button type='submit'>Add</button>
+          <label>Title:</label>
+          <input type="text" name="taskTitle" id="input-task-title" value={title} onChange={handleTitle} /><br />
+          <label>Description:</label>
+          <input type="text" name='taskText' id='input-task-text' value={text} onChange={handleText}/><br />
+          <button className="button-style-1" type='submit'>Add</button>
         </form>
       </section>
     );
