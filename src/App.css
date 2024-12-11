@@ -81,7 +81,7 @@
     margin: 0 auto;
 }
 
-.section-calendar div {
+.section-calendar div.calendar-item {
     flex-grow: 1;
     min-width: 8em;
     max-width: 12.5em;
@@ -93,12 +93,12 @@
     margin: 1em;
 }
 
-.section-calendar div h3 {
+.section-calendar div.calendar-item h3 {
     padding: .5em .5em;
     color: var(--gray-purple);
 }
 
-.section-calendar div ul {
+.section-calendar div.calendar-item ul {
     padding: .5em;
 }
 
@@ -118,12 +118,7 @@
     font-weight: 500;
 }
 
-.div-task-item-popup {
-    padding: .2em;
-    background-color: blanchedalmond;
-    border: 1px solid plum;
-}
-
+    /* CALENDAR POPUPS */
 .section-popup-add-task {
     position: absolute;
     width: 500px;
@@ -166,4 +161,48 @@
     padding: 1em;
     width: 5em;
     margin: 1em auto;
+}
+
+.div-task-item-popup {
+    position: absolute;
+    width: 15em;
+    height: 10em;
+    padding: .2em;
+    background-color: blanchedalmond;
+    border: 3.5px solid var(--dark-gray-purple);
+    border-radius: 5px;
+    z-index: 999;
+}
+
+.div-task-item-popup button, .div-task-item-popup h3, .div-task-item-popup p {
+    position: inherit;
+    z-index: inherit;
+}
+
+.div-task-item-popup button:first-of-type {
+    top: 2%;
+    left: 2%;
+    padding: .8em;
+    margin: 0;
+}
+
+.div-task-item-popup button:last-of-type {
+    top: 2%;
+    right: 2%;
+    padding: .25em .5em;
+    margin: 0;
+}
+
+.div-task-item-popup h3 {
+    top: 25%;
+    left: 1%;
+    font-size: 20px;
+}
+
+.div-task-item-popup p {
+    top: 45%;
+    left: 5%;
+    max-width: 13em;
+    text-wrap: wrap;
+    word-break: break-all;
 }

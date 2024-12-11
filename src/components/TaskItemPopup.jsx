@@ -14,8 +14,8 @@ const TaskItemPopup = ({ id, handleDeleteTask, title, text, handlePopup }) => {
   
     return (
       <div className='div-task-item-popup'>
-        <button onClick={handleClose}>X</button>
-        <button onClick={handleDelete}>Delete</button>
+        <button className="button-style-1" onClick={handleDelete}>Delete</button>
+        <button className="button-style-1" onClick={handleClose}>X</button>
         <h3>{title}</h3>
         <p>{text}</p>
       </div>

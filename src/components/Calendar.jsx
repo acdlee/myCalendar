@@ -8,7 +8,7 @@ const Calendar = ({ onShowPopup, onDeleteTask, weather, tasks }) => {
       <section className='section-calendar'>
         {tasks.isLoaded && tasks.data.map((item) => {
           return (
-            <div key={ item.day } onClick={() => {onShowPopup(item.day)}}>
+            <div className='calendar-item' key={ item.day } onClick={() => {onShowPopup(item.day)}}>
               <h3>
                 { item.day }
                 {weather.isLoaded && <img src={weather.data[weatherDataIter].icon} alt="Weather icon" />}
