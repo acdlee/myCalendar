@@ -19,11 +19,11 @@ body {
     background-color: var(--bg-light-gray);
 }
 
-h1 {
+h1, h3 {
     font-family: 'Ubuntu', sans-serif;
 }
 
-.section-header, .section-header input {
+.section-header, .section-header input, li, .div-task-item-popup {
     font-family: "Parkinsans", sans-serif;
     color: var(--dark-gray-purple);
 }
