@@ -9,4 +9,21 @@
 :root {
     --bg-gray: #ddd;
     --bg-light-gray: #F5F5F5;
+    --gray-purple: #6a5972;
+    --light-gray-purple: #d9d3dd;
+    --dark-gray-purple: #151116;
+    --fg-light-purple: #7f6b89;
+}
+
+body {
+    background-color: var(--bg-light-gray);
+}
+
+h1 {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.section-header, .section-header input {
+    font-family: "Parkinsans", sans-serif;
+    color: var(--dark-gray-purple);
 }

@@ -2,7 +2,33 @@
 
 /* MAIN SECTION */
 .main {
-    background-color: var(--bg-gray);
+    background-color: var(--bg-light-gray);
+}
+
+/* CLASSES - REUSED */
+.button-style-1 {
+    padding: .85em .6em;
+    margin-left: 1em;
+    border: 2px solid var(--dark-gray-purple);
+    color: var(--dark-gray-purple);
+    font-weight: bold;
+    cursor: pointer;
+    background-color: white;
+    transition: all 0.15s ease-in;
+    border-radius: 5px;
+}
+
+.button-style-1:hover {
+    background-color: var(--dark-gray-purple);
+    color: white;
+    border: 2px solid var(--gray-purple);
+}
+
+.input-style-1 {
+    padding: .5em;
+    border-radius: 5px;
+    border: 2px solid var(--dark-gray-purple);
+    color: var(--dark-gray-purple);
 }
 
 /* HEADER SECTION */
@@ -23,6 +49,8 @@
 
 .header-h1-location-container h1 {
     padding-right: 1em;
+    font-size: 50px;
+    color: var(--gray-purple);
 }
 
 .header-h1-location-container label {
@@ -33,7 +61,7 @@
 .section-calendar {
     width: 90vw;
     margin: 0 auto;
-    background-color: var(--bg-light-gray);
+    background-color: var(--light-gray-purple);
     padding: 1em;
 }
 

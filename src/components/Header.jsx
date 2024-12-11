@@ -13,9 +13,9 @@ const Header = ({ weekStart, weekEnd, onLocationChange }) => {
         <div className='header-h1-location-container'>
           <h1>MyCalendar</h1>
           <label>Lat Long: </label>
-          <input type="text" onChange={(e) => setInputValue(e.target.value)} />
+          <input className="input-style-1" type="text" onChange={(e) => setInputValue(e.target.value)} />
           <span style={{color: "red"}}>&lt;WGS 84 Coordinate&gt;</span>
-          <button onClick={(e) => {handleButtonClick(e)}}>Submit</button>
+          <button className="button-style-1" onClick={(e) => {handleButtonClick(e)}}>Submit</button>
         </div>
         <p>Week: {weekStart} - {weekEnd}</p>
       </section>
