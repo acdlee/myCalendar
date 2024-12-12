@@ -24,7 +24,7 @@ const taskReducer = (state, action) => {
   switch(action.type) {
     case 'INIT_TASK_DATA':
       let initData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || data;
-      // console.log(JSON.stringify(initData));
+
       return {
         ...state,
         data: initData,

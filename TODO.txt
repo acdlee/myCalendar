@@ -1,7 +1,6 @@
 TODO:
-4. weather report popup
-5. Condense tasks listed passed a certain number
+1. Add a weather description popup when you click the weather img
 
-
+. weather report popup
+. Condense tasks listed passed a certain number
 . Add test code (at least 1 or two cases)
-. Add finished styles
